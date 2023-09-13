@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "158604110475",
+    "project_id": "ditonton-zulfikar",
+    "storage_bucket": "ditonton-zulfikar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158604110475:android:e79a2303d9a5a375f8028e",
+        "android_client_info": {
+          "package_name": "com.dicoding.ditonton"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe9pVKksSc_eCPgKYwXulH1gCxnocbA2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
