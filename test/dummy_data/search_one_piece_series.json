@@ -1,0 +1,26 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/qD211Hb5XwFxrszzBBe5EUYJerh.jpg",
+      "genre_ids": [
+        10759,
+        10765
+      ],
+      "id": 111110,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "ONE PIECE",
+      "overview": "With his straw hat and ragtag crew, young pirate Monkey D. Luffy goes on an epic voyage for treasure in this live-action adaptation of the popular manga.",
+      "popularity": 2081.48,
+      "poster_path": "/rVX05xRKS5JhEYQFObCi4lAnZT4.jpg",
+      "first_air_date": "2023-08-31",
+      "name": "ONE PIECE",
+      "vote_average": 8.248,
+      "vote_count": 407
+    }
+  ]
+}
