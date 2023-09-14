@@ -26,10 +26,10 @@ import 'package:ditonton/domain/usecases/remove_tv_series_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_movies_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_series_watchlist.dart';
 import 'package:ditonton/domain/usecases/search_movies_tvseries.dart';
+import 'package:ditonton/presentation/bloc/movie_tvseries_search_cubit.dart';
 import 'package:ditonton/presentation/provider/airing_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
@@ -62,7 +62,7 @@ Future<void> init() async {
     ),
   );
   locator.registerFactory(
-    () => MovieSearchNotifier(searchMovies: locator()),
+    () => MovieTvSeriesSearchCubit(searchMovies: locator()),
   );
   locator.registerFactory(
     () => PopularMoviesNotifier(

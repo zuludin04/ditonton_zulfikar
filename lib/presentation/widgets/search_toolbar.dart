@@ -1,4 +1,4 @@
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/presentation/bloc/movie_tvseries_search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +20,8 @@ class _SearchToolbarState extends State<SearchToolbar> {
         Expanded(
           child: TextField(
             onSubmitted: (query) {
-              var provider =
-                  Provider.of<MovieSearchNotifier>(context, listen: false);
-              provider.fetchMovieSearch(searchMovie, query);
+              var bloc = context.read<MovieTvSeriesSearchCubit>();
+              bloc.onQueryChanged(searchMovie, query);
             },
             decoration: const InputDecoration(
               hintText: 'Search title',

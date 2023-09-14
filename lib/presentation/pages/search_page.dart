@@ -1,10 +1,9 @@
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/presentation/bloc/movie_tvseries_search_cubit.dart';
 import 'package:ditonton/presentation/widgets/search_card_list.dart';
 import 'package:ditonton/presentation/widgets/search_toolbar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchPage extends StatelessWidget {
   static const routeName = '/search';
@@ -28,28 +27,28 @@ class SearchPage extends StatelessWidget {
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<MovieSearchNotifier>(
-              builder: (context, data, child) {
-                if (data.searchState == RequestState.loading) {
+            BlocBuilder<MovieTvSeriesSearchCubit, MovieTvSeriesSearchState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (data.searchState == RequestState.loaded) {
-                  final result = data.searchResult;
+                } else if (state is SearchHasData) {
+                  final result = state.result;
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        final search = data.searchResult[index];
+                        final search = state.result[index];
                         return SearchCard(searchResult: search);
                       },
                       itemCount: result.length,
                     ),
                   );
+                } else if (state is SearchError) {
+                  return Expanded(child: Center(child: Text(state.message)));
                 } else {
-                  return Expanded(
-                    child: Container(),
-                  );
+                  return Expanded(child: Container());
                 }
               },
             ),
