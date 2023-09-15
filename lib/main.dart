@@ -3,6 +3,13 @@ import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/firebase_options.dart';
 import 'package:ditonton/injection.dart' as di;
 import 'package:ditonton/presentation/bloc/movie_tvseries_search_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/detail/movie_detail_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/detail/movie_detail_watchlist_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/detail/movie_recommendations_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/home/home_movie_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/popular/popular_movies_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/toprated/top_rated_movies_cubit.dart';
+import 'package:ditonton/presentation/bloc/movies/watchlist/watchlist_movie_cubit.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/dashboard_page.dart';
 import 'package:ditonton/presentation/pages/movies/movie_detail_page.dart';
@@ -15,15 +22,10 @@ import 'package:ditonton/presentation/pages/tvseries/top_rated_tv_series_page.da
 import 'package:ditonton/presentation/pages/tvseries/tv_series_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
 import 'package:ditonton/presentation/provider/airing_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_series_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_series_list_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_tv_series_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,23 +69,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistTvSeriesNotifier>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<HomeMovieCubit>(),
         ),
         BlocProvider(
           create: (_) => di.locator<MovieTvSeriesSearchCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TopRatedMoviesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<PopularMoviesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistMovieCubit>(),
         ),
       ],
       child: MaterialApp(
@@ -118,7 +117,16 @@ class MyApp extends StatelessWidget {
             case MovieDetailPage.routeName:
               final id = settings.arguments as int;
               return MaterialPageRoute(
-                builder: (_) => MovieDetailPage(id: id),
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(create: (_) => di.locator<MovieDetailCubit>()),
+                    BlocProvider(
+                        create: (_) => di.locator<MovieRecommendationsCubit>()),
+                    BlocProvider(
+                        create: (_) => di.locator<MovieDetailWatchlistCubit>())
+                  ],
+                  child: MovieDetailPage(id: id),
+                ),
                 settings: settings,
               );
             case TvSeriesDetailPage.routeName:
