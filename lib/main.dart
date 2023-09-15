@@ -10,6 +10,14 @@ import 'package:ditonton/presentation/bloc/movies/home/home_movie_cubit.dart';
 import 'package:ditonton/presentation/bloc/movies/popular/popular_movies_cubit.dart';
 import 'package:ditonton/presentation/bloc/movies/toprated/top_rated_movies_cubit.dart';
 import 'package:ditonton/presentation/bloc/movies/watchlist/watchlist_movie_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/airing/airing_tv_series_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/detail/tv_series_detail_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/detail/tv_series_detail_watchlist_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/detail/tv_series_recommendations_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/home/home_tv_series_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/popular/popular_tv_series_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/toprated/top_rated_tv_series_cubit.dart';
+import 'package:ditonton/presentation/bloc/tvseries/watchlist/watchlist_tv_series_cubit.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/dashboard_page.dart';
 import 'package:ditonton/presentation/pages/movies/movie_detail_page.dart';
@@ -21,17 +29,10 @@ import 'package:ditonton/presentation/pages/tvseries/popular_tv_series_page.dart
 import 'package:ditonton/presentation/pages/tvseries/top_rated_tv_series_page.dart';
 import 'package:ditonton/presentation/pages/tvseries/tv_series_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/airing_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_series_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_series_list_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_tv_series_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,25 +50,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvSeriesListNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<HomeTvSeriesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvSeriesDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<AiringTvSeriesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<AiringTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TopRatedTvSeriesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<PopularTvSeriesCubit>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularTvSeriesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistTvSeriesCubit>(),
         ),
         BlocProvider(
           create: (_) => di.locator<HomeMovieCubit>(),
@@ -132,7 +130,19 @@ class MyApp extends StatelessWidget {
             case TvSeriesDetailPage.routeName:
               final id = settings.arguments as int;
               return MaterialPageRoute(
-                builder: (_) => TvSeriesDetailPage(id: id),
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                        create: (_) => di.locator<TvSeriesDetailCubit>()),
+                    BlocProvider(
+                        create: (_) =>
+                            di.locator<TvSeriesRecommendationsCubit>()),
+                    BlocProvider(
+                        create: (_) =>
+                            di.locator<TvSeriesDetailWatchlistCubit>())
+                  ],
+                  child: TvSeriesDetailPage(id: id),
+                ),
                 settings: settings,
               );
             case SearchPage.routeName:
