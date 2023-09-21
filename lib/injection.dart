@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ditonton/data/datasources/db/database_helper.dart';
 import 'package:ditonton/data/datasources/source/movies/movie_local_data_source.dart';
 import 'package:ditonton/data/datasources/source/movies/movie_remote_data_source.dart';
@@ -42,8 +44,10 @@ import 'package:ditonton/presentation/bloc/tvseries/home/home_tv_series_cubit.da
 import 'package:ditonton/presentation/bloc/tvseries/popular/popular_tv_series_cubit.dart';
 import 'package:ditonton/presentation/bloc/tvseries/toprated/top_rated_tv_series_cubit.dart';
 import 'package:ditonton/presentation/bloc/tvseries/watchlist/watchlist_tv_series_cubit.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 final locator = GetIt.instance;
 
@@ -155,5 +159,13 @@ Future<void> init() async {
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // external
-  locator.registerLazySingleton(() => http.Client());
+  final sslCert = await rootBundle.load('certificates/certificates.pem');
+  SecurityContext securityContext = SecurityContext(withTrustedRoots: false);
+  securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
+
+  HttpClient client = HttpClient(context: securityContext);
+  client.badCertificateCallback =
+      (X509Certificate cert, String host, int port) => false;
+  IOClient ioClient = IOClient(client);
+  locator.registerLazySingleton(() => ioClient);
 }

@@ -40,7 +40,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  di.init();
+  await di.init();
 
   runApp(const MyApp());
 }

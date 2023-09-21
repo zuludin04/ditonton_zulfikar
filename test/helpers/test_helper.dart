@@ -6,6 +6,7 @@ import 'package:ditonton/data/datasources/source/tvseries/tv_series_remote_data_
 import 'package:ditonton/domain/repositories/movie_repository.dart';
 import 'package:ditonton/domain/repositories/tv_series_repository.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:mockito/annotations.dart';
 
 @GenerateMocks([
@@ -17,6 +18,6 @@ import 'package:mockito/annotations.dart';
   TvSeriesLocalDataSource,
   DatabaseHelper,
 ], customMocks: [
-  MockSpec<http.Client>(as: #MockHttpClient)
+  MockSpec<IOClient>(as: #MockHttpClient)
 ])
 void main() {}

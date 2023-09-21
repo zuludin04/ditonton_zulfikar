@@ -4,7 +4,7 @@ import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/data/models/tvseries/tv_series_detail_model.dart';
 import 'package:ditonton/data/models/tvseries/tv_series_model.dart';
 import 'package:ditonton/data/models/tvseries/tv_series_response.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 abstract class TvSeriesRemoteDataSource {
   Future<List<TvSeriesModel>> getAiringTvSeries();
@@ -24,7 +24,7 @@ class TvSeriesRemoteDataSourceImpl extends TvSeriesRemoteDataSource {
   static const apiKey = 'api_key=2174d146bb9c0eab47529b2e77d6b526';
   static const baseUrl = 'https://api.themoviedb.org/3';
 
-  final http.Client client;
+  final IOClient client;
 
   TvSeriesRemoteDataSourceImpl({required this.client});
 
