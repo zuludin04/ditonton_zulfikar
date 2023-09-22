@@ -38,6 +38,13 @@ void main() {
 
   final tMovieList = <Movie>[tMovie];
 
+  test('initial state is PopularMoviesState.loading', () {
+    expect(
+      moviesCubit.state,
+      const PopularMoviesState.loading(),
+    );
+  });
+
   blocTest<PopularMoviesCubit, PopularMoviesState>(
     'should change state to loading when usecase is called',
     build: () {
@@ -50,8 +57,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <PopularMoviesState>[
-      PopularMoviesLoading(),
-      PopularMoviesHasData(movies: tMovieList),
+      PopularMoviesState.hasData(tMovieList),
     ],
     verify: (bloc) {
       verify(mockGetPopularMovies.execute());
@@ -70,8 +76,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <PopularMoviesState>[
-      PopularMoviesLoading(),
-      const PopularMoviesError(message: 'Server Failure'),
+      const PopularMoviesState.error('Server Failure'),
     ],
     verify: (bloc) {
       verify(mockGetPopularMovies.execute());

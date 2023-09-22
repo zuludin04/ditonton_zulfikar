@@ -9,18 +9,16 @@ class PopularMoviesCubit extends Cubit<PopularMoviesState> {
   final GetPopularMovies getPopularMovies;
 
   PopularMoviesCubit({required this.getPopularMovies})
-      : super(PopularMoviesInitial());
+      : super(const PopularMoviesState.loading());
 
   Future<void> fetchPopularMovies() async {
-    emit(PopularMoviesLoading());
-
     var result = await getPopularMovies.execute();
     result.fold(
       (failure) {
-        emit(PopularMoviesError(message: failure.message));
+        emit(PopularMoviesState.error(failure.message));
       },
       (moviesData) {
-        emit(PopularMoviesHasData(movies: moviesData));
+        emit(PopularMoviesState.hasData(moviesData));
       },
     );
   }
