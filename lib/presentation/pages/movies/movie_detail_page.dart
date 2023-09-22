@@ -24,13 +24,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     super.initState();
-    // Future.microtask(() {
-    //   context.read<MovieDetailCubit>().fetchMovieDetail(widget.id);
-    //   context.read<MovieDetailWatchlistCubit>().loadWatchlistStatus(widget.id);
-    //   context
-    //       .read<MovieRecommendationsCubit>()
-    //       .fetchMovieRecommendations(widget.id);
-    // });
+    Future.microtask(() {
+      context.read<MovieDetailCubit>().fetchMovieDetail(widget.id);
+      context.read<MovieDetailWatchlistCubit>().loadWatchlistStatus(widget.id);
+      context
+          .read<MovieRecommendationsCubit>()
+          .fetchMovieRecommendations(widget.id);
+    });
   }
 
   @override
