@@ -9,18 +9,16 @@ class MovieRecommendationsCubit extends Cubit<MovieRecommendationsState> {
   final GetMovieRecommendations getMovieRecommendations;
 
   MovieRecommendationsCubit({required this.getMovieRecommendations})
-      : super(MovieRecommendationsInitial());
+      : super(const MovieRecommendationsState.loading());
 
   Future<void> fetchMovieRecommendations(int id) async {
-    emit(MovieRecommendationsLoading());
-
     var recommendationResult = await getMovieRecommendations.execute(id);
     recommendationResult.fold(
       (failure) {
-        emit(MovieRecommendationsError(message: failure.message));
+        emit(MovieRecommendationsState.error(failure.message));
       },
       (movies) {
-        emit(MovieRecommendationsHasData(movies: movies));
+        emit(MovieRecommendationsState.hasData(movies));
       },
     );
   }

@@ -1,32 +1,29 @@
 part of 'movie_recommendations_cubit.dart';
 
-abstract class MovieRecommendationsState extends Equatable {
-  const MovieRecommendationsState();
+enum MovieRecommendationsStatus { loading, error, empty, hasData }
+
+final class MovieRecommendationsState extends Equatable {
+  final List<Movie> movies;
+  final String message;
+  final MovieRecommendationsStatus status;
+
+  const MovieRecommendationsState._({
+    this.movies = const <Movie>[],
+    this.message = "",
+    this.status = MovieRecommendationsStatus.loading,
+  });
+
+  const MovieRecommendationsState.loading() : this._();
+
+  const MovieRecommendationsState.empty()
+      : this._(status: MovieRecommendationsStatus.empty);
+
+  const MovieRecommendationsState.error(String message)
+      : this._(message: message, status: MovieRecommendationsStatus.error);
+
+  const MovieRecommendationsState.hasData(List<Movie> movies)
+      : this._(movies: movies, status: MovieRecommendationsStatus.hasData);
 
   @override
   List<Object> get props => [];
-}
-
-class MovieRecommendationsInitial extends MovieRecommendationsState {}
-
-class MovieRecommendationsLoading extends MovieRecommendationsState {}
-
-class MovieRecommendationsEmpty extends MovieRecommendationsState {}
-
-class MovieRecommendationsError extends MovieRecommendationsState {
-  final String message;
-
-  const MovieRecommendationsError({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
-
-class MovieRecommendationsHasData extends MovieRecommendationsState {
-  final List<Movie> movies;
-
-  const MovieRecommendationsHasData({required this.movies});
-
-  @override
-  List<Object> get props => [movies];
 }

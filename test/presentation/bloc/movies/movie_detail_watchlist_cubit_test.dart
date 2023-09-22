@@ -46,7 +46,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <MovieDetailWatchlistState>[
-        const MovieDetailWatchlistStatus(isWatchlist: true),
+        const MovieDetailWatchlistState.watchlistStatus(true),
       ],
     );
 
@@ -100,8 +100,8 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <MovieDetailWatchlistState>[
-        const MovieDetailWatchlistChangeStatus(message: 'Added To Watchlist'),
-        const MovieDetailWatchlistStatus(isWatchlist: true),
+        const MovieDetailWatchlistState.changeStatus('Added To Watchlist'),
+        const MovieDetailWatchlistState.watchlistStatus(true),
       ],
       verify: (bloc) {
         verify(mockGetWatchlistStatus.execute(testMovieDetail.id));
@@ -122,8 +122,8 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <MovieDetailWatchlistState>[
-        const MovieDetailWatchlistChangeStatus(message: 'Failed'),
-        const MovieDetailWatchlistStatus(isWatchlist: false),
+        const MovieDetailWatchlistState.changeStatus('Failed'),
+        const MovieDetailWatchlistState.watchlistStatus(false),
       ],
     );
   });

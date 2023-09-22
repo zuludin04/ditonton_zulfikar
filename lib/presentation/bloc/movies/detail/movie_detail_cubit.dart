@@ -10,19 +10,17 @@ class MovieDetailCubit extends Cubit<MovieDetailState> {
 
   MovieDetailCubit({
     required this.getMovieDetail,
-  }) : super(MovieDetailInitial());
+  }) : super(const MovieDetailState.loading());
 
   Future<void> fetchMovieDetail(int id) async {
-    emit(MovieDetailLoading());
-
     final detailResult = await getMovieDetail.execute(id);
 
     detailResult.fold(
       (failure) {
-        emit(MovieDetailError(message: failure.message));
+        emit(MovieDetailState.error(failure.message));
       },
       (movie) {
-        emit(MovieDetailHasData(detail: movie));
+        emit(MovieDetailState.hasData(movie));
       },
     );
   }

@@ -46,6 +46,13 @@ void main() {
         .thenAnswer((_) async => Right(tMovies));
   }
 
+  test('initial state is PopularMoviesState.loading', () {
+    expect(
+      movieCubit.state,
+      const MovieRecommendationsState.loading(),
+    );
+  });
+
   group('Get Movie Recommendations', () {
     blocTest<MovieRecommendationsCubit, MovieRecommendationsState>(
       'should get data from usecase',
@@ -73,8 +80,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <MovieRecommendationsState>[
-        MovieRecommendationsLoading(),
-        MovieRecommendationsHasData(movies: tMovies),
+        MovieRecommendationsState.hasData(tMovies),
       ],
     );
 
@@ -90,8 +96,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <MovieRecommendationsState>[
-        MovieRecommendationsLoading(),
-        const MovieRecommendationsError(message: 'Server Failure'),
+        const MovieRecommendationsState.error('Server Failure'),
       ],
     );
   });

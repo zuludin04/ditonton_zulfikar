@@ -16,17 +16,17 @@ class MovieDetailWatchlistCubit extends Cubit<MovieDetailWatchlistState> {
     required this.getWatchListStatus,
     required this.saveWatchlist,
     required this.removeWatchlist,
-  }) : super(MovieDetailWatchlistInitial());
+  }) : super(const MovieDetailWatchlistState.initial());
 
   Future<void> addWatchlist(MovieDetail movie) async {
     final result = await saveWatchlist.execute(movie);
 
     await result.fold(
       (failure) async {
-        emit(MovieDetailWatchlistChangeStatus(message: failure.message));
+        emit(MovieDetailWatchlistState.changeStatus(failure.message));
       },
       (successMessage) async {
-        emit(MovieDetailWatchlistChangeStatus(message: successMessage));
+        emit(MovieDetailWatchlistState.changeStatus(successMessage));
       },
     );
 
@@ -38,10 +38,10 @@ class MovieDetailWatchlistCubit extends Cubit<MovieDetailWatchlistState> {
 
     await result.fold(
       (failure) async {
-        emit(MovieDetailWatchlistChangeStatus(message: failure.message));
+        emit(MovieDetailWatchlistState.changeStatus(failure.message));
       },
       (successMessage) async {
-        emit(MovieDetailWatchlistChangeStatus(message: successMessage));
+        emit(MovieDetailWatchlistState.changeStatus(successMessage));
       },
     );
 
@@ -50,6 +50,6 @@ class MovieDetailWatchlistCubit extends Cubit<MovieDetailWatchlistState> {
 
   Future<void> loadWatchlistStatus(int id) async {
     final result = await getWatchListStatus.execute(id);
-    emit(MovieDetailWatchlistStatus(isWatchlist: result));
+    emit(MovieDetailWatchlistState.watchlistStatus(result));
   }
 }

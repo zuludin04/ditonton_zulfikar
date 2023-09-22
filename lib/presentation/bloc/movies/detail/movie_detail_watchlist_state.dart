@@ -1,28 +1,34 @@
 part of 'movie_detail_watchlist_cubit.dart';
 
-abstract class MovieDetailWatchlistState extends Equatable {
-  const MovieDetailWatchlistState();
-
-  @override
-  List<Object> get props => [];
+enum MovieDetailWatchlistStatus {
+  initial,
+  isWatchlistStatus,
+  changeWatchlistStatus
 }
 
-class MovieDetailWatchlistInitial extends MovieDetailWatchlistState {}
-
-class MovieDetailWatchlistStatus extends MovieDetailWatchlistState {
+final class MovieDetailWatchlistState extends Equatable {
   final bool isWatchlist;
-
-  const MovieDetailWatchlistStatus({required this.isWatchlist});
-
-  @override
-  List<Object> get props => [isWatchlist];
-}
-
-class MovieDetailWatchlistChangeStatus extends MovieDetailWatchlistState {
   final String message;
+  final MovieDetailWatchlistStatus status;
 
-  const MovieDetailWatchlistChangeStatus({required this.message});
+  const MovieDetailWatchlistState._({
+    this.isWatchlist = false,
+    this.message = "",
+    this.status = MovieDetailWatchlistStatus.initial,
+  });
+
+  const MovieDetailWatchlistState.initial() : this._();
+
+  const MovieDetailWatchlistState.watchlistStatus(bool isWatchlist)
+      : this._(
+            isWatchlist: isWatchlist,
+            status: MovieDetailWatchlistStatus.isWatchlistStatus);
+
+  const MovieDetailWatchlistState.changeStatus(String message)
+      : this._(
+            message: message,
+            status: MovieDetailWatchlistStatus.changeWatchlistStatus);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [isWatchlist, message, status];
 }
