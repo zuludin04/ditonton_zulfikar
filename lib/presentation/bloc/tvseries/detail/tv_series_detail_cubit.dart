@@ -8,21 +8,18 @@ part 'tv_series_detail_state.dart';
 class TvSeriesDetailCubit extends Cubit<TvSeriesDetailState> {
   final GetTvSeriesDetail getTvSeriesDetail;
 
-  TvSeriesDetailCubit({
-    required this.getTvSeriesDetail,
-  }) : super(TvSeriesDetailInitial());
+  TvSeriesDetailCubit({required this.getTvSeriesDetail})
+      : super(const TvSeriesDetailState.loading());
 
   Future<void> fetchTvSeriesDetail(int id) async {
-    emit(TvSeriesDetailLoading());
-
     final detailResult = await getTvSeriesDetail.execute(id);
 
     detailResult.fold(
       (failure) {
-        emit(TvSeriesDetailError(message: failure.message));
+        emit(TvSeriesDetailState.error(failure.message));
       },
       (series) {
-        emit(TvSeriesDetailHasData(detail: series));
+        emit(TvSeriesDetailState.hasData(series));
       },
     );
   }

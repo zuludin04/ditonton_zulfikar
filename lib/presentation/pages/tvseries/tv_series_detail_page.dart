@@ -40,15 +40,14 @@ class _TvSeriesDetailPageState extends State<TvSeriesDetailPage> {
     return Scaffold(
       body: BlocBuilder<TvSeriesDetailCubit, TvSeriesDetailState>(
         builder: (context, state) {
-          if (state is TvSeriesDetailLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is TvSeriesDetailHasData) {
-            final tvSeries = state.detail;
-            return SafeArea(child: DetailContent(tvSeries: tvSeries));
-          } else if (state is TvSeriesDetailError) {
-            return Text(state.message);
-          } else {
-            return Container();
+          switch (state.status) {
+            case TvSeriesDetailStatus.loading:
+              return const Center(child: CircularProgressIndicator());
+            case TvSeriesDetailStatus.error:
+              return Text(state.message);
+            case TvSeriesDetailStatus.hasData:
+              final tvSeries = state.detail;
+              return SafeArea(child: DetailContent(tvSeries: tvSeries!));
           }
         },
       ),
@@ -197,38 +196,35 @@ class TvSeriesWatchlistButton extends StatelessWidget {
     return BlocConsumer<TvSeriesDetailWatchlistCubit,
         TvSeriesDetailWatchlistState>(
       listener: (context, state) {
-        if (state is TvSeriesDetailWatchlistChangeStatus) {
+        if (state.status ==
+            TvSeriesDetailWatchlistStatus.changeWatchlistStatus) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
-        if (state is TvSeriesDetailWatchlistStatus) {
-          return ElevatedButton(
-            onPressed: () async {
-              if (!state.isWatchlist) {
-                await context
-                    .read<TvSeriesDetailWatchlistCubit>()
-                    .addWatchlist(tvSeries);
-              } else {
-                await context
-                    .read<TvSeriesDetailWatchlistCubit>()
-                    .removeFromWatchlist(tvSeries);
-              }
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                state.isWatchlist
-                    ? const Icon(Icons.check)
-                    : const Icon(Icons.add),
-                const Text('Watchlist'),
-              ],
-            ),
-          );
-        } else {
-          return Container();
-        }
+        return ElevatedButton(
+          onPressed: () async {
+            if (!state.isWatchlist) {
+              await context
+                  .read<TvSeriesDetailWatchlistCubit>()
+                  .addWatchlist(tvSeries);
+            } else {
+              await context
+                  .read<TvSeriesDetailWatchlistCubit>()
+                  .removeFromWatchlist(tvSeries);
+            }
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              state.isWatchlist
+                  ? const Icon(Icons.check)
+                  : const Icon(Icons.add),
+              const Text('Watchlist'),
+            ],
+          ),
+        );
       },
     );
   }
@@ -242,51 +238,50 @@ class TvSeriesDetailRecommendations extends StatelessWidget {
     return BlocBuilder<TvSeriesRecommendationsCubit,
         TvSeriesRecommendationsState>(
       builder: (context, state) {
-        if (state is TvSeriesRecommendationsLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is TvSeriesRecommendationsError) {
-          return Text(state.message);
-        } else if (state is TvSeriesRecommendationsEmpty) {
-          return const Text('Recommendation is Empty');
-        } else if (state is TvSeriesRecommendationsHasData) {
-          return SizedBox(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final tvSeries = state.tvSeries[index];
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        TvSeriesDetailPage.routeName,
-                        arguments: tvSeries.id,
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            'https://image.tmdb.org/t/p/w500${tvSeries.posterPath}',
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(),
+        switch (state.status) {
+          case TvSeriesRecommendationsStatus.loading:
+            return const Center(child: CircularProgressIndicator());
+          case TvSeriesRecommendationsStatus.error:
+            return Text(key: const Key('error_message'), state.message);
+          case TvSeriesRecommendationsStatus.empty:
+            return const Text('Recommendation is Empty');
+          case TvSeriesRecommendationsStatus.hasData:
+            return SizedBox(
+              height: 150,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final tvSeries = state.tvSeries[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          TvSeriesDetailPage.routeName,
+                          arguments: tvSeries.id,
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              'https://image.tmdb.org/t/p/w500${tvSeries.posterPath}',
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-              itemCount: state.tvSeries.length,
-            ),
-          );
-        } else {
-          return Container();
+                  );
+                },
+                itemCount: state.tvSeries.length,
+              ),
+            );
         }
       },
     );

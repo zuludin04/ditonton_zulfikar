@@ -1,30 +1,26 @@
 part of 'popular_tv_series_cubit.dart';
 
-abstract class PopularTvSeriesState extends Equatable {
-  const PopularTvSeriesState();
+enum PopularTvSeriesStatus { loading, error, hasData }
 
-  @override
-  List<Object> get props => [];
-}
-
-class PopularTvSeriesInitial extends PopularTvSeriesState {}
-
-class PopularTvSeriesLoading extends PopularTvSeriesState {}
-
-class PopularTvSeriesError extends PopularTvSeriesState {
-  final String message;
-
-  const PopularTvSeriesError({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
-
-class PopularTvSeriesHasData extends PopularTvSeriesState {
+final class PopularTvSeriesState extends Equatable {
   final List<TvSeries> tvSeries;
+  final String message;
+  final PopularTvSeriesStatus status;
 
-  const PopularTvSeriesHasData({required this.tvSeries});
+  const PopularTvSeriesState._({
+    this.tvSeries = const <TvSeries>[],
+    this.message = "",
+    this.status = PopularTvSeriesStatus.loading,
+  });
+
+  const PopularTvSeriesState.loading() : this._();
+
+  const PopularTvSeriesState.error(String message)
+      : this._(message: message, status: PopularTvSeriesStatus.error);
+
+  const PopularTvSeriesState.hasData(List<TvSeries> tvSeries)
+      : this._(tvSeries: tvSeries, status: PopularTvSeriesStatus.hasData);
 
   @override
-  List<Object> get props => [tvSeries];
+  List<Object> get props => [tvSeries, message, status];
 }

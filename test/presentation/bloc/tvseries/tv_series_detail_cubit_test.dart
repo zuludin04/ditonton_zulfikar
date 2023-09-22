@@ -28,6 +28,13 @@ void main() {
         .thenAnswer((_) async => const Right(testTvSeriesDetail));
   }
 
+  test('initial state is TvSeriesDetailState.loading', () {
+    expect(
+      tvSeriesCubit.state,
+      const TvSeriesDetailState.loading(),
+    );
+  });
+
   group('Get TvSeries Detail', () {
     blocTest<TvSeriesDetailCubit, TvSeriesDetailState>(
       'should get data from usecase',
@@ -55,8 +62,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesDetailState>[
-        TvSeriesDetailLoading(),
-        const TvSeriesDetailHasData(detail: testTvSeriesDetail),
+        const TvSeriesDetailState.hasData(testTvSeriesDetail),
       ],
     );
 
@@ -72,8 +78,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesDetailState>[
-        TvSeriesDetailLoading(),
-        const TvSeriesDetailError(message: 'Server Failure'),
+        const TvSeriesDetailState.error('Server Failure'),
       ],
     );
   });

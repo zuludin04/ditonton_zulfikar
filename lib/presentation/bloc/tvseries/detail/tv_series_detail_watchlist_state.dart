@@ -1,28 +1,34 @@
 part of 'tv_series_detail_watchlist_cubit.dart';
 
-abstract class TvSeriesDetailWatchlistState extends Equatable {
-  const TvSeriesDetailWatchlistState();
-
-  @override
-  List<Object> get props => [];
+enum TvSeriesDetailWatchlistStatus {
+  initial,
+  isWatchlistStatus,
+  changeWatchlistStatus
 }
 
-class TvSeriesDetailWatchlistInitial extends TvSeriesDetailWatchlistState {}
-
-class TvSeriesDetailWatchlistStatus extends TvSeriesDetailWatchlistState {
+final class TvSeriesDetailWatchlistState extends Equatable {
   final bool isWatchlist;
-
-  const TvSeriesDetailWatchlistStatus({required this.isWatchlist});
-
-  @override
-  List<Object> get props => [isWatchlist];
-}
-
-class TvSeriesDetailWatchlistChangeStatus extends TvSeriesDetailWatchlistState {
   final String message;
+  final TvSeriesDetailWatchlistStatus status;
 
-  const TvSeriesDetailWatchlistChangeStatus({required this.message});
+  const TvSeriesDetailWatchlistState._({
+    this.isWatchlist = false,
+    this.message = "",
+    this.status = TvSeriesDetailWatchlistStatus.initial,
+  });
+
+  const TvSeriesDetailWatchlistState.initial() : this._();
+
+  const TvSeriesDetailWatchlistState.watchlistStatus(bool isWatchlist)
+      : this._(
+      isWatchlist: isWatchlist,
+      status: TvSeriesDetailWatchlistStatus.isWatchlistStatus);
+
+  const TvSeriesDetailWatchlistState.changeStatus(String message)
+      : this._(
+      message: message,
+      status: TvSeriesDetailWatchlistStatus.changeWatchlistStatus);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [isWatchlist, message, status];
 }

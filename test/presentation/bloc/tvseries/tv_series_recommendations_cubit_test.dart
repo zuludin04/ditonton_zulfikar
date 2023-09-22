@@ -46,6 +46,13 @@ void main() {
         .thenAnswer((_) async => Right(tTvSeriesList));
   }
 
+  test('initial state is TvSeriesRecommendationsState.loading', () {
+    expect(
+      tvSeriesCubit.state,
+      const TvSeriesRecommendationsState.loading(),
+    );
+  });
+
   group('Get TvSeries Recommendations', () {
     blocTest<TvSeriesRecommendationsCubit, TvSeriesRecommendationsState>(
       'should get data from usecase',
@@ -73,8 +80,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesRecommendationsState>[
-        TvSeriesRecommendationsLoading(),
-        TvSeriesRecommendationsHasData(tvSeries: tTvSeriesList),
+        TvSeriesRecommendationsState.hasData(tTvSeriesList),
       ],
     );
 
@@ -90,8 +96,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesRecommendationsState>[
-        TvSeriesRecommendationsLoading(),
-        const TvSeriesRecommendationsError(message: 'Server Failure'),
+        const TvSeriesRecommendationsState.error('Server Failure'),
       ],
     );
   });

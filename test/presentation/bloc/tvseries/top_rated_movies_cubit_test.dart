@@ -38,6 +38,13 @@ void main() {
   );
   final tTvSeriesList = [tTvSeries];
 
+  test('initial state is TopRatedTvSeriesState.loading', () {
+    expect(
+      tvSeriesCubit.state,
+      const TopRatedTvSeriesState.loading(),
+    );
+  });
+
   blocTest<TopRatedTvSeriesCubit, TopRatedTvSeriesState>(
     'should change state to loading when usecase is called',
     build: () {
@@ -50,8 +57,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <TopRatedTvSeriesState>[
-      TopRatedTvSeriesLoading(),
-      TopRatedTvSeriesHasData(tvSeries: tTvSeriesList),
+      TopRatedTvSeriesState.hasData(tTvSeriesList),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedTvSeries.execute());
@@ -71,8 +77,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <TopRatedTvSeriesState>[
-      TopRatedTvSeriesLoading(),
-      const TopRatedTvSeriesError(message: 'Server Failure'),
+      const TopRatedTvSeriesState.error('Server Failure'),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedTvSeries.execute());

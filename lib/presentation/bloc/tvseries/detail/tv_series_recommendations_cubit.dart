@@ -9,18 +9,16 @@ class TvSeriesRecommendationsCubit extends Cubit<TvSeriesRecommendationsState> {
   final GetTvSeriesRecommendations getTvSeriesRecommendations;
 
   TvSeriesRecommendationsCubit({required this.getTvSeriesRecommendations})
-      : super(TvSeriesRecommendationsInitial());
+      : super(const TvSeriesRecommendationsState.loading());
 
   Future<void> fetchTvSeriesRecommendations(int id) async {
-    emit(TvSeriesRecommendationsLoading());
-
     var recommendationResult = await getTvSeriesRecommendations.execute(id);
     recommendationResult.fold(
       (failure) {
-        emit(TvSeriesRecommendationsError(message: failure.message));
+        emit(TvSeriesRecommendationsState.error(failure.message));
       },
       (series) {
-        emit(TvSeriesRecommendationsHasData(tvSeries: series));
+        emit(TvSeriesRecommendationsState.hasData(series));
       },
     );
   }

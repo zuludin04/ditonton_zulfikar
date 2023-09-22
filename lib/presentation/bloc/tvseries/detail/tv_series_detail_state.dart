@@ -1,30 +1,26 @@
 part of 'tv_series_detail_cubit.dart';
 
-abstract class TvSeriesDetailState extends Equatable {
-  const TvSeriesDetailState();
+enum TvSeriesDetailStatus { loading, error, hasData }
 
-  @override
-  List<Object> get props => [];
-}
-
-class TvSeriesDetailInitial extends TvSeriesDetailState {}
-
-class TvSeriesDetailLoading extends TvSeriesDetailState {}
-
-class TvSeriesDetailError extends TvSeriesDetailState {
+final class TvSeriesDetailState extends Equatable {
+  final TvSeriesDetail? detail;
   final String message;
+  final TvSeriesDetailStatus status;
 
-  const TvSeriesDetailError({required this.message});
+  const TvSeriesDetailState._({
+    this.detail,
+    this.message = "",
+    this.status = TvSeriesDetailStatus.loading,
+  });
+
+  const TvSeriesDetailState.loading() : this._();
+
+  const TvSeriesDetailState.hasData(TvSeriesDetail detail)
+      : this._(status: TvSeriesDetailStatus.hasData, detail: detail);
+
+  const TvSeriesDetailState.error(String message)
+      : this._(status: TvSeriesDetailStatus.error, message: message);
 
   @override
-  List<Object> get props => [message];
-}
-
-class TvSeriesDetailHasData extends TvSeriesDetailState {
-  final TvSeriesDetail detail;
-
-  const TvSeriesDetailHasData({required this.detail});
-
-  @override
-  List<Object> get props => [detail];
+  List<Object> get props => [message, status];
 }

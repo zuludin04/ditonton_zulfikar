@@ -9,19 +9,17 @@ class AiringTvSeriesCubit extends Cubit<AiringTvSeriesState> {
   final GetAiringTvSeries getAiringTvSeries;
 
   AiringTvSeriesCubit({required this.getAiringTvSeries})
-      : super(AiringTvSeriesInitial());
+      : super(const AiringTvSeriesState.loading());
 
   Future<void> fetchAiringTvSeries() async {
-    emit(AiringTvSeriesLoading());
-
     final result = await getAiringTvSeries.execute();
 
     result.fold(
       (failure) {
-        emit(AiringTvSeriesError(message: failure.message));
+        emit(AiringTvSeriesState.error(failure.message));
       },
       (seriesData) {
-        emit(AiringTvSeriesHasData(tvSeries: seriesData));
+        emit(AiringTvSeriesState.hasData(seriesData));
       },
     );
   }

@@ -1,32 +1,30 @@
 part of 'tv_series_recommendations_cubit.dart';
 
-abstract class TvSeriesRecommendationsState extends Equatable {
-  const TvSeriesRecommendationsState();
+enum TvSeriesRecommendationsStatus { loading, error, empty, hasData }
 
-  @override
-  List<Object> get props => [];
-}
-
-class TvSeriesRecommendationsInitial extends TvSeriesRecommendationsState {}
-
-class TvSeriesRecommendationsLoading extends TvSeriesRecommendationsState {}
-
-class TvSeriesRecommendationsEmpty extends TvSeriesRecommendationsState {}
-
-class TvSeriesRecommendationsError extends TvSeriesRecommendationsState {
-  final String message;
-
-  const TvSeriesRecommendationsError({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
-
-class TvSeriesRecommendationsHasData extends TvSeriesRecommendationsState {
+final class TvSeriesRecommendationsState extends Equatable {
   final List<TvSeries> tvSeries;
+  final String message;
+  final TvSeriesRecommendationsStatus status;
 
-  const TvSeriesRecommendationsHasData({required this.tvSeries});
+  const TvSeriesRecommendationsState._({
+    this.tvSeries = const <TvSeries>[],
+    this.message = "",
+    this.status = TvSeriesRecommendationsStatus.loading,
+  });
+
+  const TvSeriesRecommendationsState.loading() : this._();
+
+  const TvSeriesRecommendationsState.empty()
+      : this._(status: TvSeriesRecommendationsStatus.empty);
+
+  const TvSeriesRecommendationsState.error(String message)
+      : this._(message: message, status: TvSeriesRecommendationsStatus.error);
+
+  const TvSeriesRecommendationsState.hasData(List<TvSeries> tvSeries)
+      : this._(
+            tvSeries: tvSeries, status: TvSeriesRecommendationsStatus.hasData);
 
   @override
-  List<Object> get props => [tvSeries];
+  List<Object> get props => [tvSeries, message, status];
 }

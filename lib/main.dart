@@ -56,15 +56,6 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<HomeTvSeriesCubit>(),
         ),
         BlocProvider(
-          create: (_) => di.locator<AiringTvSeriesCubit>(),
-        ),
-        BlocProvider(
-          create: (_) => di.locator<TopRatedTvSeriesCubit>(),
-        ),
-        BlocProvider(
-          create: (_) => di.locator<PopularTvSeriesCubit>(),
-        ),
-        BlocProvider(
           create: (_) => di.locator<WatchlistTvSeriesCubit>(),
         ),
         BlocProvider(
@@ -109,13 +100,28 @@ class MyApp extends StatelessWidget {
               );
             case AiringTvSeriesPage.routeName:
               return CupertinoPageRoute(
-                  builder: (_) => const AiringTvSeriesPage());
+                builder: (_) => BlocProvider<AiringTvSeriesCubit>(
+                  create: (context) =>
+                      di.locator<AiringTvSeriesCubit>()..fetchAiringTvSeries(),
+                  child: const AiringTvSeriesPage(),
+                ),
+              );
             case TopRatedTvSeriesPage.routeName:
               return CupertinoPageRoute(
-                  builder: (_) => const TopRatedTvSeriesPage());
+                builder: (_) => BlocProvider<TopRatedTvSeriesCubit>(
+                  create: (context) => di.locator<TopRatedTvSeriesCubit>()
+                    ..fetchTopRatedTvSeries(),
+                  child: const TopRatedTvSeriesPage(),
+                ),
+              );
             case PopularTvSeriesPage.routeName:
               return CupertinoPageRoute(
-                  builder: (_) => const PopularTvSeriesPage());
+                builder: (_) => BlocProvider<PopularTvSeriesCubit>(
+                  create: (context) => di.locator<PopularTvSeriesCubit>()
+                    ..fetchPopularTvSeries(),
+                  child: const PopularTvSeriesPage(),
+                ),
+              );
             case MovieDetailPage.routeName:
               final id = settings.arguments as int;
               return MaterialPageRoute(

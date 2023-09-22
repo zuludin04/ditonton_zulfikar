@@ -46,7 +46,7 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesDetailWatchlistState>[
-        const TvSeriesDetailWatchlistStatus(isWatchlist: true),
+        const TvSeriesDetailWatchlistState.watchlistStatus(true),
       ],
     );
 
@@ -100,9 +100,8 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesDetailWatchlistState>[
-        const TvSeriesDetailWatchlistChangeStatus(
-            message: 'Added To Watchlist'),
-        const TvSeriesDetailWatchlistStatus(isWatchlist: true),
+        const TvSeriesDetailWatchlistState.changeStatus('Added To Watchlist'),
+        const TvSeriesDetailWatchlistState.watchlistStatus(true),
       ],
       verify: (bloc) {
         verify(mockGetWatchlistStatus.execute(testTvSeriesDetail.id));
@@ -123,8 +122,8 @@ void main() {
       },
       wait: const Duration(milliseconds: 100),
       expect: () => <TvSeriesDetailWatchlistState>[
-        const TvSeriesDetailWatchlistChangeStatus(message: 'Failed'),
-        const TvSeriesDetailWatchlistStatus(isWatchlist: false),
+        const TvSeriesDetailWatchlistState.changeStatus('Failed'),
+        const TvSeriesDetailWatchlistState.watchlistStatus(false),
       ],
     );
   });

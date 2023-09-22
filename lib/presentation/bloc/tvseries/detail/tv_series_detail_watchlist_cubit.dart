@@ -16,17 +16,17 @@ class TvSeriesDetailWatchlistCubit extends Cubit<TvSeriesDetailWatchlistState> {
     required this.getWatchListStatus,
     required this.saveWatchlist,
     required this.removeWatchlist,
-  }) : super(TvSeriesDetailWatchlistInitial());
+  }) : super(const TvSeriesDetailWatchlistState.initial());
 
   Future<void> addWatchlist(TvSeriesDetail tvSeries) async {
     final result = await saveWatchlist.execute(tvSeries);
 
     await result.fold(
       (failure) async {
-        emit(TvSeriesDetailWatchlistChangeStatus(message: failure.message));
+        emit(TvSeriesDetailWatchlistState.changeStatus(failure.message));
       },
       (successMessage) async {
-        emit(TvSeriesDetailWatchlistChangeStatus(message: successMessage));
+        emit(TvSeriesDetailWatchlistState.changeStatus(successMessage));
       },
     );
 
@@ -38,10 +38,10 @@ class TvSeriesDetailWatchlistCubit extends Cubit<TvSeriesDetailWatchlistState> {
 
     await result.fold(
       (failure) async {
-        emit(TvSeriesDetailWatchlistChangeStatus(message: failure.message));
+        emit(TvSeriesDetailWatchlistState.changeStatus(failure.message));
       },
       (successMessage) async {
-        emit(TvSeriesDetailWatchlistChangeStatus(message: successMessage));
+        emit(TvSeriesDetailWatchlistState.changeStatus(successMessage));
       },
     );
 
@@ -50,6 +50,6 @@ class TvSeriesDetailWatchlistCubit extends Cubit<TvSeriesDetailWatchlistState> {
 
   Future<void> loadWatchlistStatus(int id) async {
     final result = await getWatchListStatus.execute(id);
-    emit(TvSeriesDetailWatchlistStatus(isWatchlist: result));
+    emit(TvSeriesDetailWatchlistState.watchlistStatus(result));
   }
 }
