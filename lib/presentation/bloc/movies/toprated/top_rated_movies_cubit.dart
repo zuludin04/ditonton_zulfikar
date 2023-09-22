@@ -9,19 +9,16 @@ class TopRatedMoviesCubit extends Cubit<TopRatedMoviesState> {
   final GetTopRatedMovies getTopRatedMovies;
 
   TopRatedMoviesCubit({required this.getTopRatedMovies})
-      : super(TopRatedMoviesInitial());
+      : super(const TopRatedMoviesState.loading());
 
   Future<void> fetchTopRatedMovies() async {
-    emit(TopRatedMoviesLoading());
-
     final result = await getTopRatedMovies.execute();
-
     result.fold(
       (failure) {
-        emit(TopRatedMoviesError(message: failure.message));
+        emit(TopRatedMoviesState.error(failure.message));
       },
       (moviesData) {
-        emit(TopRatedMoviesHasData(movies: moviesData));
+        emit(TopRatedMoviesState.hasData(moviesData));
       },
     );
   }

@@ -38,6 +38,13 @@ void main() {
 
   final tMovieList = <Movie>[tMovie];
 
+  test('initial state is TopRatedMoviesState.loading', () {
+    expect(
+      moviesCubit.state,
+      const TopRatedMoviesState.loading(),
+    );
+  });
+
   blocTest<TopRatedMoviesCubit, TopRatedMoviesState>(
     'should change state to loading when usecase is called',
     build: () {
@@ -50,8 +57,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <TopRatedMoviesState>[
-      TopRatedMoviesLoading(),
-      TopRatedMoviesHasData(movies: tMovieList),
+      TopRatedMoviesState.hasData(tMovieList),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedMovies.execute());
@@ -62,7 +68,7 @@ void main() {
     'should return error when data is unsuccessful',
     build: () {
       when(mockGetTopRatedMovies.execute()).thenAnswer((realInvocation) async =>
-      const Left(ServerFailure('Server Failure')));
+          const Left(ServerFailure('Server Failure')));
       return moviesCubit;
     },
     act: (bloc) {
@@ -70,8 +76,7 @@ void main() {
     },
     wait: const Duration(milliseconds: 100),
     expect: () => <TopRatedMoviesState>[
-      TopRatedMoviesLoading(),
-      const TopRatedMoviesError(message: 'Server Failure'),
+      const TopRatedMoviesState.error('Server Failure'),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedMovies.execute());

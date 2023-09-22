@@ -74,12 +74,6 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<MovieTvSeriesSearchCubit>(),
         ),
         BlocProvider(
-          create: (_) => di.locator<TopRatedMoviesCubit>(),
-        ),
-        BlocProvider(
-          create: (_) => di.locator<PopularMoviesCubit>()..fetchPopularMovies(),
-        ),
-        BlocProvider(
           create: (_) => di.locator<WatchlistMovieCubit>(),
         ),
       ],
@@ -99,10 +93,20 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => const DashboardPage());
             case PopularMoviesPage.routeName:
               return CupertinoPageRoute(
-                  builder: (_) => const PopularMoviesPage());
+                builder: (_) => BlocProvider<PopularMoviesCubit>(
+                  create: (context) =>
+                      di.locator<PopularMoviesCubit>()..fetchPopularMovies(),
+                  child: const PopularMoviesPage(),
+                ),
+              );
             case TopRatedMoviesPage.routeName:
               return CupertinoPageRoute(
-                  builder: (_) => const TopRatedMoviesPage());
+                builder: (_) => BlocProvider<TopRatedMoviesCubit>(
+                  create: (context) =>
+                      di.locator<TopRatedMoviesCubit>()..fetchTopRatedMovies(),
+                  child: const TopRatedMoviesPage(),
+                ),
+              );
             case AiringTvSeriesPage.routeName:
               return CupertinoPageRoute(
                   builder: (_) => const AiringTvSeriesPage());
